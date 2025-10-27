@@ -1,0 +1,212 @@
+{
+    "info": {
+        "_postman_id": "<a_valid_uuid>",
+        "name": "API de Monitoreo de Red",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Request Token",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "username",
+                                    "value": "your_username",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "your_password",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/token",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "token"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Hosts",
+            "item": [
+                {
+                    "name": "Get All Hosts",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/hosts",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "hosts"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Host by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/hosts/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "hosts",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Host",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"NOM_HOST\": \"new_host\",\n    \"IP_HOST\": \"192.168.1.100\",\n    \"ID_MODELO\": 1,\n    \"ID_RESPONSABLE\": 1,\n    \"ID_UBICACION\": 1,\n    \"ID_PROCESO\": 1,\n    \"ID_CATEGORIA\": 1,\n    \"ID_ESTADO\": 1
+}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/hosts",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "hosts"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Host",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"NOM_HOST\": \"updated_host_name\"
+}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/hosts/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "hosts",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Host",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/hosts/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "hosts",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Alerts",
+            "item": [
+                {
+                    "name": "Get Active Alerts",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/alerts/active",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "alerts",
+                                "active"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}
