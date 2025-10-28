@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 
-DATABASE_URL = "sqlite:///../monitor_ping.db"
+DATABASE_URL = "sqlite:///api/monitor_ping.db"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
