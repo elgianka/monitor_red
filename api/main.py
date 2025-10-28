@@ -15,7 +15,7 @@ app.include_router(modelos.router, prefix="/api/v1")
 app.include_router(estados.router, prefix="/api/v1")
 app.include_router(procesos.router, prefix="/api/v1")
 app.include_router(sedes.router, prefix="/api/v1")
-app.include_router(auth.router, tags=["Authentication"])
+app.include_router(auth.router, prefix="/api/v1", tags=["Authentication"])
 
 @app.get("/", tags=["Root"])
 async def read_root():
