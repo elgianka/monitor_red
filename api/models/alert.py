@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from ..db.session import Base
+from .host import HostDB
 
 class AlertBase(BaseModel):
     id_host: int
@@ -38,4 +39,4 @@ class AlertDB(Base):
     timestamp_fin = Column("TIMESTAMP_FIN", DateTime, nullable=True)
     id_monitoreo_inicio = Column("ID_MONITOREO_INICIO", Integer)
 
-    host = relationship("HostDB")
+    host = relationship(HostDB)
