@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 from ..db.session import Base
 
 class ModeloBase(BaseModel):
@@ -13,7 +14,7 @@ class Modelo(ModeloBase):
     ID_MODELO: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ModeloDB(Base):
     __tablename__ = "TB_MODELO"
@@ -21,3 +22,5 @@ class ModeloDB(Base):
     ID_MODELO = Column(Integer, primary_key=True, index=True)
     NOM_MODELO = Column(String, nullable=False)
     ID_MARCA = Column(Integer, ForeignKey("TB_MARCA.ID_MARCA"))
+
+    hosts = relationship("HostDB", back_populates="modelo")

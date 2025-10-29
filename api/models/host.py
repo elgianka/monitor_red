@@ -1,15 +1,16 @@
-from sqlalchemy import Column, Integer, String, Float, Date
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
+from sqlalchemy.orm import relationship
 from pydantic import BaseModel
 from typing import Optional
 import datetime
-
-Base = declarative_base()
+# CORRECCIÓN CLAVE: Importar la Base compartida
+from ..db.session import Base
 
 # SQLAlchemy Model
 class HostDB(Base):
     __tablename__ = "TB_HOST"
 
+    # Claves Primarias y Campos Propios
     ID_HOST = Column(Integer, primary_key=True, index=True)
     NOM_HOST = Column(String, nullable=False)
     IP_HOST = Column(String, nullable=False, unique=True)
@@ -18,14 +19,28 @@ class HostDB(Base):
     FIRMWARE_VERSION = Column(String)
     FECHA_ALTA = Column(Date)
     AÑO_ALTA = Column(Integer)
-    ID_MODELO = Column(Integer)
-    ID_RESPONSABLE = Column(Integer)
-    ID_UBICACION = Column(Integer)
-    ID_PROCESO = Column(Integer)
-    ID_CATEGORIA = Column(Integer)
-    ID_ESTADO = Column(Integer)
     LIM_SUP_PING = Column(Float)
     LIM_INF_PING = Column(Float)
+
+    # Claves Foráneas (Se asume que hay una tabla de modelos por cada uno de estos)
+    ID_MODELO = Column(Integer, ForeignKey("TB_MODELO.ID_MODELO"))
+    ID_RESPONSABLE = Column(Integer, ForeignKey("TB_RESPONSABLE.ID_RESPONSABLE"))
+    ID_UBICACION = Column(Integer, ForeignKey("TB_UBICACION.ID_UBICACION"))
+    ID_PROCESO = Column(Integer, ForeignKey("TB_PROCESO.ID_PROCESO"))
+    ID_CATEGORIA = Column(Integer, ForeignKey("TB_CATEGORIA.ID_CATEGORIA"))
+    ID_ESTADO = Column(Integer, ForeignKey("TB_ESTADO.ID_ESTADO"))
+
+    # Relaciones (Usando cadenas para evitar dependencias circulares)
+    modelo = relationship("ModeloDB", back_populates="hosts")
+    responsable = relationship("ResponsableDB", back_populates="hosts")
+    ubicacion = relationship("UbicacionDB", back_populates="hosts")
+    proceso = relationship("ProcesoDB", back_populates="hosts")
+    categoria = relationship("CategoriaDB", back_populates="hosts")
+    estado = relationship("EstadoDB", back_populates="hosts")
+
+    # Relación a alertas (bidireccional)
+    alerts = relationship("AlertDB", back_populates="host")
+
 
 # Pydantic Model for API responses
 class Host(BaseModel):
