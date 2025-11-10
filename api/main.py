@@ -28,6 +28,8 @@ async def lifespan(app: FastAPI):
     print("INFO: Ejecutando inicialización de la base de datos en evento 'startup'...")
     
     # 1. Crea todas las tablas si no existen
+    print("INFO: Forzando la recreación del esquema de la base de datos...")
+    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 
     # 2. Crea el usuario 'admin' si no existe (AHORA HABILITADO)

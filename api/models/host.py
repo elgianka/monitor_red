@@ -38,6 +38,7 @@ class HostDB(Base):
     proceso = relationship("ProcesoDB", back_populates="hosts")
     categoria = relationship("CategoriaDB", back_populates="hosts")
     estado = relationship("EstadoDB", back_populates="hosts")
+    sede = relationship("SedeDB", back_populates="hosts")
 
     # Relación a alertas (bidireccional)
     alerts = relationship("AlertDB", back_populates="host")

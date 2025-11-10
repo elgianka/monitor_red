@@ -14,8 +14,12 @@ class Sede(SedeBase):
     class Config:
         from_attributes = True
 
+from sqlalchemy.orm import relationship
+
 class SedeDB(Base):
     __tablename__ = "TB_SEDE"
 
     ID_SEDE = Column(Integer, primary_key=True, index=True)
     NOM_SEDE = Column(String, nullable=False)
+
+    hosts = relationship("HostDB", back_populates="sede")

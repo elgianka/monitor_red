@@ -3,7 +3,7 @@ import sqlite3
 import os
 
 # --- CONFIGURACION ---
-DB_FILE = "../monitor_ping.db"
+DB_FILE = "monitor_ping.db"
 ADMIN_USERNAME = "admin"
 # Hash pre-calculado para la contrasena "admin"
 # Este hash fue generado con un entorno de bcrypt que funciona correctamente.

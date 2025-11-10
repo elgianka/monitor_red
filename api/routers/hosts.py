@@ -23,7 +23,8 @@ def create_host(host: host_model.HostCreate, db: Session = Depends(get_db), curr
         "ID_UBICACION": 1,
         "ID_PROCESO": 1,
         "ID_CATEGORIA": 1,
-        "ID_ESTADO": 1
+        "ID_ESTADO": 1,
+        "ID_SEDE": 1
     }
 
     for field, default_value in default_fields.items():
