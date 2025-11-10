@@ -20,7 +20,7 @@ def create_alert(alert: alert_model.AlertCreate, db: Session = Depends(get_db), 
     return db_alert
 
 @router.get("/alerts", response_model=List[alert_model.Alert], tags=["Alerts"])
-def get_alerts(db: Session = Depends(get_db)):
+def get_alerts(db: Session = Depends(get_db), current_user: user_model.UserDB = Depends(get_current_user)):
     """
     Obtiene una lista de todas las alertas.
     """
@@ -28,7 +28,7 @@ def get_alerts(db: Session = Depends(get_db)):
     return alerts
 
 @router.get("/alerts/active", response_model=List[alert_model.Alert], tags=["Alerts"])
-def get_active_alerts(db: Session = Depends(get_db)):
+def get_active_alerts(db: Session = Depends(get_db), current_user: user_model.UserDB = Depends(get_current_user)):
     """
     Obtiene una lista de todas las alertas activas.
     """
@@ -36,7 +36,7 @@ def get_active_alerts(db: Session = Depends(get_db)):
     return alerts
 
 @router.get("/alerts/{id_alerta}", response_model=alert_model.Alert, tags=["Alerts"])
-def get_alert(id_alerta: int, db: Session = Depends(get_db)):
+def get_alert(id_alerta: int, db: Session = Depends(get_db), current_user: user_model.UserDB = Depends(get_current_user)):
     """
     Obtiene una alerta específica por su ID.
     """

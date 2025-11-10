@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List
 
 from ..models import host as host_model, user as user_model
@@ -12,23 +12,44 @@ router = APIRouter()
 def create_host(host: host_model.HostCreate, db: Session = Depends(get_db), current_user: user_model.UserDB = Depends(get_current_user)):
     """
     Crea un nuevo host.
+    MODIFICADO: Acepta datos incompletos y rellena con valores por defecto para compatibilidad.
     """
-    db_host = host_model.HostDB(**host.dict())
+    host_data = host.dict()
+    
+    # Rellenar campos faltantes con valores por defecto (ID=1)
+    default_fields = {
+        "ID_MODELO": 1,
+        "ID_RESPONSABLE": 1,
+        "ID_UBICACION": 1,
+        "ID_PROCESO": 1,
+        "ID_CATEGORIA": 1,
+        "ID_ESTADO": 1
+    }
+
+    for field, default_value in default_fields.items():
+        if field not in host_data or host_data[field] is None:
+            host_data[field] = default_value
+
+    db_host = host_model.HostDB(**host_data)
     db.add(db_host)
     db.commit()
     db.refresh(db_host)
-    return db_host
+
+    # Volver a cargar el host con la relación 'estado' para la respuesta
+    created_host_with_relations = db.query(host_model.HostDB).options(joinedload(host_model.HostDB.estado)).filter(host_model.HostDB.ID_HOST == db_host.ID_HOST).first()
+    
+    return created_host_with_relations
 
 @router.get("/hosts", response_model=List[host_model.Host], tags=["Hosts"])
-def get_hosts(db: Session = Depends(get_db)):
+def get_hosts(db: Session = Depends(get_db), current_user: user_model.UserDB = Depends(get_current_user)):
     """
     Obtiene una lista de todos los hosts.
     """
-    hosts = db.query(host_model.HostDB).all()
+    hosts = db.query(host_model.HostDB).options(joinedload(host_model.HostDB.estado)).all()
     return hosts
 
 @router.get("/hosts/{id_host}", response_model=host_model.Host, tags=["Hosts"])
-def get_host(id_host: int, db: Session = Depends(get_db)):
+def get_host(id_host: int, db: Session = Depends(get_db), current_user: user_model.UserDB = Depends(get_current_user)):
     """
     Obtiene un host específico por su ID.
     """

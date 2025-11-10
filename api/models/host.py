@@ -18,7 +18,7 @@ class HostDB(Base):
     NUM_SERIE = Column(String)
     FIRMWARE_VERSION = Column(String)
     FECHA_ALTA = Column(Date)
-    AÑO_ALTA = Column(Integer)
+    ANHO_ALTA = Column(Integer)
     LIM_SUP_PING = Column(Float)
     LIM_INF_PING = Column(Float)
 
@@ -26,6 +26,7 @@ class HostDB(Base):
     ID_MODELO = Column(Integer, ForeignKey("TB_MODELO.ID_MODELO"))
     ID_RESPONSABLE = Column(Integer, ForeignKey("TB_RESPONSABLE.ID_RESPONSABLE"))
     ID_UBICACION = Column(Integer, ForeignKey("TB_UBICACION.ID_UBICACION"))
+    ID_SEDE = Column(Integer, ForeignKey("TB_SEDE.ID_SEDE"))
     ID_PROCESO = Column(Integer, ForeignKey("TB_PROCESO.ID_PROCESO"))
     ID_CATEGORIA = Column(Integer, ForeignKey("TB_CATEGORIA.ID_CATEGORIA"))
     ID_ESTADO = Column(Integer, ForeignKey("TB_ESTADO.ID_ESTADO"))
@@ -40,7 +41,11 @@ class HostDB(Base):
 
     # Relación a alertas (bidireccional)
     alerts = relationship("AlertDB", back_populates="host")
+    monitoreos = relationship("MonitoreoDB", back_populates="host")
 
+
+from .estado import Estado
+from .ubicacion import Ubicacion
 
 # Pydantic Model for API responses
 class Host(BaseModel):
@@ -51,13 +56,13 @@ class Host(BaseModel):
     NUM_SERIE: Optional[str] = None
     FIRMWARE_VERSION: Optional[str] = None
     FECHA_ALTA: Optional[datetime.date] = None
-    AÑO_ALTA: Optional[int] = None
-    ID_MODELO: int
+    ANHO_ALTA: Optional[int] = None
+    ID_MODELO: int # Se mantendrán como ID por ahora para no sobrecargar la respuesta
     ID_RESPONSABLE: int
-    ID_UBICACION: int
     ID_PROCESO: int
     ID_CATEGORIA: int
-    ID_ESTADO: int
+    estado: Optional[Estado] = None # <-- CAMBIO CLAVE: El estado ahora es opcional
+    ubicacion: Optional[Ubicacion] = None # <-- CAMBIO CLAVE: Se añade la ubicación completa
     LIM_SUP_PING: Optional[float] = None
     LIM_INF_PING: Optional[float] = None
 
@@ -71,13 +76,13 @@ class HostCreate(BaseModel):
     NUM_SERIE: Optional[str] = None
     FIRMWARE_VERSION: Optional[str] = None
     FECHA_ALTA: Optional[datetime.date] = None
-    AÑO_ALTA: Optional[int] = None
-    ID_MODELO: int
-    ID_RESPONSABLE: int
-    ID_UBICACION: int
-    ID_PROCESO: int
-    ID_CATEGORIA: int
-    ID_ESTADO: int
+    ANHO_ALTA: Optional[int] = None
+    ID_MODELO: Optional[int] = None
+    ID_RESPONSABLE: Optional[int] = None
+    ID_UBICACION: Optional[int] = None
+    ID_PROCESO: Optional[int] = None
+    ID_CATEGORIA: Optional[int] = None
+    ID_ESTADO: Optional[int] = None
     LIM_SUP_PING: Optional[float] = None
     LIM_INF_PING: Optional[float] = None
 
@@ -88,7 +93,7 @@ class HostUpdate(BaseModel):
     NUM_SERIE: Optional[str] = None
     FIRMWARE_VERSION: Optional[str] = None
     FECHA_ALTA: Optional[datetime.date] = None
-    AÑO_ALTA: Optional[int] = None
+    ANHO_ALTA: Optional[int] = None
     ID_MODELO: Optional[int] = None
     ID_RESPONSABLE: Optional[int] = None
     ID_UBICACION: Optional[int] = None

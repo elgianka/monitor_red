@@ -12,7 +12,7 @@ class Sede(SedeBase):
     ID_SEDE: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class SedeDB(Base):
     __tablename__ = "TB_SEDE"

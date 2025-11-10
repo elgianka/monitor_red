@@ -40,15 +40,18 @@ class LoginView(ctk.CTkFrame):
         self.update_idletasks() # Force UI update to show disabled state
 
         try:
-            # This part will be threaded in the future to avoid UI freeze
-            authenticated = self.api_client.authenticate(username, password)
+            authenticated, error_msg = self.api_client.authenticate(username, password)
         except Exception as e:
             authenticated = False
-            print(f"Login exception: {e}") # Log the actual error
+            error_msg = str(e)
+            print(f"Login exception: {e}")
 
         self.login_button.configure(state="normal", text="Ingresar")
 
         if authenticated:
             self.on_login_success()
         else:
-            self.error_label.configure(text="Error de autenticación. Verifique sus credenciales.")
+            error_text = "Error de autenticación. Verifique sus credenciales."
+            if error_msg:
+                error_text = f"Error de autenticación: {error_msg}"
+            self.error_label.configure(text=error_text)

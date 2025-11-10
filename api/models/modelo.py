@@ -24,3 +24,4 @@ class ModeloDB(Base):
     ID_MARCA = Column(Integer, ForeignKey("TB_MARCA.ID_MARCA"))
 
     hosts = relationship("HostDB", back_populates="modelo")
+    marca = relationship("MarcaDB", back_populates="modelos")

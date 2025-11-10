@@ -13,7 +13,7 @@ class User(UserBase):
     id_usuario: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserDB(Base):
     __tablename__ = "TB_USUARIOS_DEL_SISTEMA"
