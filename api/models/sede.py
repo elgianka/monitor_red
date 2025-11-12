@@ -23,3 +23,4 @@ class SedeDB(Base):
     NOM_SEDE = Column(String, nullable=False)
 
     hosts = relationship("HostDB", back_populates="sede")
+    ubicaciones = relationship("UbicacionDB", back_populates="sede_rel")

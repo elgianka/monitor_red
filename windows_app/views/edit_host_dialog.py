@@ -27,13 +27,13 @@ class EditHostDialog(ctk.CTkToplevel):
         self.wait_window()
 
     def _load_combobox_data(self):
-        self.combobox_data["modelos"] = self.api_client.get_all_items("modelos") or []
-        self.combobox_data["responsables"] = self.api_client.get_all_items("responsables") or []
-        self.combobox_data["ubicaciones"] = self.api_client.get_all_items("ubicaciones") or []
-        self.combobox_data["procesos"] = self.api_client.get_all_items("procesos") or []
-        self.combobox_data["categorias"] = self.api_client.get_all_items("categorias") or []
-        self.combobox_data["estados"] = self.api_client.get_all_items("estados") or []
-        self.combobox_data["sedes"] = self.api_client.get_all_items("sedes") or []
+        self.combobox_data["modelos"] = self.api_client.get_modelos() or []
+        self.combobox_data["responsables"] = self.api_client.get_responsables() or []
+        self.combobox_data["ubicaciones"] = self.api_client.get_ubicaciones() or []
+        self.combobox_data["procesos"] = self.api_client.get_procesos() or []
+        self.combobox_data["categorias"] = self.api_client.get_categorias() or []
+        self.combobox_data["estados"] = self.api_client.get_estados() or []
+        self.combobox_data["sedes"] = self.api_client.get_sedes() or []
 
     def _create_widgets(self):
         row = 0
@@ -155,7 +155,7 @@ class EditHostDialog(ctk.CTkToplevel):
                 value = widget.get()
                 if value:
                     # Type conversion based on expected model types
-                    if field_name in ["ANHO_ALTA", "ID_MODELO", "ID_RESPONSABLE", "ID_UBICACION", "ID_PROCESO", "ID_CATEGORIA", "ID_ESTADO"]:
+                    if field_name in ["ANHO_ALTA"]:
                         try: data[field_name] = int(value)
                         except ValueError: data[field_name] = None
                     elif field_name in ["LIM_SUP_PING", "LIM_INF_PING"]:

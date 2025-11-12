@@ -41,8 +41,8 @@ class HostDB(Base):
     sede = relationship("SedeDB", back_populates="hosts")
 
     # Relación a alertas (bidireccional)
-    alerts = relationship("AlertDB", back_populates="host")
-    monitoreos = relationship("MonitoreoDB", back_populates="host")
+    alerts = relationship("AlertDB", back_populates="host", cascade="all, delete-orphan")
+    monitoreos = relationship("MonitoreoDB", back_populates="host", cascade="all, delete-orphan")
 
 
 from .estado import Estado

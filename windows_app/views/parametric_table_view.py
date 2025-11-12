@@ -120,7 +120,20 @@ class ParametricTableView(ctk.CTkFrame):
         if self.table:
             self.table.destroy()
 
-        items = self.api_client.get_all_items(self.endpoint)
+        public_endpoints = ["sedes", "categorias", "estados", "marcas", "modelos", "procesos", "responsables", "ubicaciones"]
+        
+        items = None
+        if self.endpoint in public_endpoints:
+            # Dynamically call the correct public method, e.g., get_sedes(), get_categorias()
+            method_to_call = getattr(self.api_client, f"get_{self.endpoint}", None)
+            if method_to_call:
+                items = method_to_call()
+            else:
+                # Fallback or error for safety, though it shouldn't be reached with the current structure
+                items = self.api_client._get_public_items(self.endpoint)
+        else:
+            items = self.api_client.get_all_items(self.endpoint)
+
         if items is None:
             messagebox.showerror("Error", f"No se pudieron cargar los {self.endpoint}.")
             items = []

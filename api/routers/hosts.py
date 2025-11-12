@@ -68,6 +68,10 @@ def update_host(id_host: int, host: host_model.HostUpdate, db: Session = Depends
     if db_host is None:
         raise HTTPException(status_code=404, detail="Host not found")
     update_data = host.dict(exclude_unset=True)
+
+    # Filtrar claves cuyo valor es None
+    update_data = {k: v for k, v in update_data.items() if v is not None}
+
     for key, value in update_data.items():
         setattr(db_host, key, value)
     db.add(db_host)

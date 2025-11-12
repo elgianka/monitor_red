@@ -128,13 +128,23 @@ class DashboardView(ctk.CTkFrame):
 
     def setup_ui_with_data(self, hosts, categorias, alerts, sedes):
         self.categories = categorias if categorias is not None else []
-        self.update_host_list(hosts, {}) 
-        self.update_pie_chart(hosts)
-        self.update_sede_summary(hosts, sedes)
+        
+        # Use initial results from monitoring service if available
+        initial_ping_results = {}
+        if self.monitoring_service:
+            initial_ping_results = self.monitoring_service.realtime_ping_results
+            
+        self.update_host_list(hosts, initial_ping_results)
         
         total_hosts = len(hosts) if hosts else 0
-        active_hosts = len([h for h in hosts if h and h.get('estado', {}).get('NOM_ESTADO') == 'Activo']) if hosts else 0
+        
+        # Calculate active/inactive based on real-time results for consistency
+        active_hosts = sum(1 for host in hosts if initial_ping_results.get(host.get("ID_HOST")) is not None) if hosts else 0
         inactive_hosts = total_hosts - active_hosts
+        
+        self.update_pie_chart_with_counts(active_hosts, inactive_hosts)
+        self.update_sede_summary(hosts, sedes)
+        
         active_alerts = len(alerts) if alerts else 0
         self.update_summary_values(total_hosts, active_hosts, inactive_hosts, active_alerts)
 
@@ -154,7 +164,7 @@ class DashboardView(ctk.CTkFrame):
             self.update_summary_values(total_hosts, active_hosts_count, inactive_hosts_count, alerts_count)
 
             if self.chart_title_label.cget("text") == "Distribución de Hosts por Estado":
-                 self.update_pie_chart(hosts)
+                 self.update_pie_chart_with_counts(active_hosts_count, inactive_hosts_count)
 
     def update_summary_values(self, total, active, inactive, alerts):
         self.hosts_frame.value_label.configure(text=str(total))
@@ -294,31 +304,26 @@ class DashboardView(ctk.CTkFrame):
         self.fig.tight_layout()
         self.canvas.draw()
 
-    def update_pie_chart(self, hosts):
+    def update_pie_chart_with_counts(self, active_count, inactive_count):
         self.chart_title_label.configure(text="Distribución de Hosts por Estado")
         self.ax.clear()
         self.ax.set_facecolor('#2B2B2B')
         self.fig.patch.set_facecolor('#2B2B2B')
 
-        if not hosts:
+        total = active_count + inactive_count
+        if total == 0:
             self.ax.text(0.5, 0.5, "Sin datos de hosts", ha="center", va="center", color="white")
             self.canvas.draw()
             return
 
-        active_hosts = len([h for h in hosts if h and h.get('estado', {}).get('NOM_ESTADO') == 'Activo'])
-        inactive_hosts = len(hosts) - active_hosts
-        
         labels = ['Activos', 'Inactivos']
-        sizes = [active_hosts, inactive_hosts]
+        sizes = [active_count, inactive_count]
         colors = ['#1F6AA5', '#FF4D4D']
         
-        if sum(sizes) > 0:
-            self.ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90,
-                        textprops={'color': 'white', 'fontsize': 10, 'weight': 'bold'},
-                        pctdistance=0.85, wedgeprops=dict(width=0.4, edgecolor='w'))
-            self.ax.axis('equal')
-        else:
-            self.ax.text(0.5, 0.5, "Sin datos de hosts", ha="center", va="center", color="white")
+        self.ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90,
+                    textprops={'color': 'white', 'fontsize': 10, 'weight': 'bold'},
+                    pctdistance=0.85, wedgeprops=dict(width=0.4, edgecolor='w'))
+        self.ax.axis('equal')
 
         self.canvas.draw()
 

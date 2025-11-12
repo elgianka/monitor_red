@@ -62,10 +62,12 @@ class App(ctk.CTk):
 
     def on_login_success(self):
         self.login_view.destroy()
-        self.setup_main_ui()
-        # Start monitoring service
+
+        # Start monitoring service before setting up the main UI
         self.monitoring_service = MonitoringService(self.api_client)
         self.monitoring_service.start()
+
+        self.setup_main_ui()
         self.start_ui_refresh() # Start UI refresh after monitoring service starts
 
     def on_closing(self):

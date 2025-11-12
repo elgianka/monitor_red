@@ -22,5 +22,24 @@ El punto de partida indiscutible es el **backend (API REST)**. Sin una API funci
 ### 3. Fase 3: Completar la Lógica de la API (Backend)
 *   Mientras los frontends avanzan, el equipo de backend continúa implementando los endpoints de **escritura (POST, PUT, DELETE)** para la gestión completa del sistema. - **DONE**
 
+### 4. Fase 4: Puesta en Producción
+*   **Contenerización (Docker):**
+    *   **API (Backend):** Crear un `Dockerfile` para empaquetar la API de FastAPI con un servidor de producción (Gunicorn + Uvicorn).
+    *   **Web App (Frontend):** Crear un `Dockerfile` para construir la aplicación de React y servir los archivos estáticos con Nginx.
+    *   **Orquestación:** Usar `docker-compose.yml` para definir y ejecutar todos los servicios de forma coordinada.
+*   **Despliegue del Backend (API):**
+    *   Utilizar un servidor de producción como Gunicorn.
+    *   Gestionar la configuración (credenciales, secretos) mediante variables de entorno.
+    *   Desplegar el contenedor en un servicio en la nube (ej. AWS ECS, Google Cloud Run) o un VPS.
+*   **Despliegue del Frontend (Web App):**
+    *   Generar el build de producción (`npm run build`).
+    *   Hospedar los archivos estáticos en un servicio especializado (ej. Vercel, Netlify) o servirlos con Nginx.
+*   **Distribución de la App de Escritorio (Windows):**
+    *   Empaquetar la aplicación en un `.exe` autocontenido usando **PyInstaller**.
+    *   Crear un instalador profesional con **Inno Setup** o similar.
+*   **Gestión de la Base de Datos:**
+    *   Utilizar un servicio de base de datos gestionado en la nube (ej. AWS RDS).
+    *   Implementar un sistema de migraciones de esquema con **Alembic**.
+
 ## Resumen del Kickoff
 Nuestra primera tarea es **crear un nuevo directorio para la API (ej. `api/`) y empezar a escribir el código para el primer endpoint con FastAPI**.

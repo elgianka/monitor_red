@@ -25,13 +25,13 @@ class AddHostDialog(ctk.CTkToplevel):
         self.wait_window()
 
     def _load_combobox_data(self):
-        self.combobox_data["modelos"] = self.api_client.get_all_items("modelos") or []
-        self.combobox_data["responsables"] = self.api_client.get_all_items("responsables") or []
-        self.combobox_data["ubicaciones"] = self.api_client.get_all_items("ubicaciones") or []
-        self.combobox_data["procesos"] = self.api_client.get_all_items("procesos") or []
-        self.combobox_data["categorias"] = self.api_client.get_all_items("categorias") or []
-        self.combobox_data["estados"] = self.api_client.get_all_items("estados") or []
-        self.combobox_data["sedes"] = self.api_client.get_all_items("sedes") or []
+        self.combobox_data["modelos"] = self.api_client.get_modelos() or []
+        self.combobox_data["responsables"] = self.api_client.get_responsables() or []
+        self.combobox_data["ubicaciones"] = self.api_client.get_ubicaciones() or []
+        self.combobox_data["procesos"] = self.api_client.get_procesos() or []
+        self.combobox_data["categorias"] = self.api_client.get_categorias() or []
+        self.combobox_data["estados"] = self.api_client.get_estados() or []
+        self.combobox_data["sedes"] = self.api_client.get_sedes() or []
         
         if not self.combobox_data["sedes"]:
             messagebox.showwarning("Datos Faltantes", "No se pudieron cargar las sedes. El campo 'Sede' estará vacío.")

@@ -110,10 +110,10 @@ class InventoryView(ctk.CTkFrame):
                 messagebox.showerror("Error", f"Error al actualizar el host: {e}")
 
     def delete_host(self, host):
-        host_name = host.get("H_NOM", "N/A")
+        host_name = host.get("NOM_HOST", "N/A")
         if messagebox.askyesno("Confirmar Eliminación", f"¿Está seguro de que desea eliminar el host '{host_name}'?"):
             try:
-                success = self.api_client.delete_host(host.get("H_ID"))
+                success = self.api_client.delete_host(host.get("ID_HOST"))
                 if success:
                     self.load_hosts()
                 else:

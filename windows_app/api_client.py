@@ -50,6 +50,15 @@ class ApiClient:
             print(f"Failed to get items from {endpoint}: {e}")
             return None
 
+    def _get_public_items(self, endpoint: str):
+        try:
+            response = requests.get(f"{self.base_url}/{endpoint}")
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"Failed to get public items from {endpoint}: {e}")
+            return None
+
     def get_item(self, endpoint: str, item_id: int):
         try:
             headers = self._get_auth_headers()
@@ -91,10 +100,28 @@ class ApiClient:
             return False
 
     def get_sedes(self):
-        return self.get_all_items("sedes")
+        return self._get_public_items("sedes")
 
     def get_categorias(self):
-        return self.get_all_items("categorias")
+        return self._get_public_items("categorias")
+
+    def get_estados(self):
+        return self._get_public_items("estados")
+
+    def get_marcas(self):
+        return self._get_public_items("marcas")
+
+    def get_modelos(self):
+        return self._get_public_items("modelos")
+
+    def get_procesos(self):
+        return self._get_public_items("procesos")
+
+    def get_responsables(self):
+        return self._get_public_items("responsables")
+
+    def get_ubicaciones(self):
+        return self._get_public_items("ubicaciones")
 
     def get_host(self, host_id):
         try:
@@ -133,19 +160,25 @@ class ApiClient:
             return None
 
     def update_host(self, host_id, host_data):
+        print(f"Updating host {host_id} with data: {host_data}")
         try:
             headers = self._get_auth_headers()
             response = requests.put(f"{self.base_url}/hosts/{host_id}", json=host_data, headers=headers)
+            print(f"Update response status code: {response.status_code}")
+            print(f"Update response content: {response.text}")
             response.raise_for_status()
-            return response.json()
+            return response.status_code == 200
         except requests.exceptions.RequestException as e:
             print(f"Failed to update host: {e}")
-            return None
+            return False
 
     def delete_host(self, host_id):
+        print(f"Deleting host {host_id}")
         try:
             headers = self._get_auth_headers()
             response = requests.delete(f"{self.base_url}/hosts/{host_id}", headers=headers)
+            print(f"Delete response status code: {response.status_code}")
+            print(f"Delete response content: {response.text}")
             response.raise_for_status()
             return True
         except requests.exceptions.RequestException as e:
